@@ -21,13 +21,17 @@
     "react-dom": "17.0.2",
     "react-hook-form": "^7.19.5",
     "react-icons": "^4.3.1",
+    "react-query": "^3.33.1",
     "yup": "^0.32.11"
   },
   "devDependencies": {
+    "@types/faker": "^5.5.9",
     "@types/node": "^16.11.7",
     "@types/react": "^17.0.34",
     "eslint": "7",
     "eslint-config-next": "12.0.3",
+    "faker": "^5.5.3",
+    "miragejs": "^0.1.42",
     "typescript": "^4.4.4"
   }
 }
