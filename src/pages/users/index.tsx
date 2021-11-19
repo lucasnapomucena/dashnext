@@ -23,20 +23,23 @@ import { useState } from "react";
 import { Header } from "../../components/Header";
 import { Pagination } from "../../components/Pagination";
 import { Sidebar } from "../../components/Sidebar";
-import { useUsers } from "../../services/hooks/useUsers";
+import { useUsers, getUsers } from "../../services/hooks/useUsers";
 import { queryClient } from '../../services/queyClient';
 import { api } from '../../services/api';
+import { GetServerSideProps } from 'next';
 
-export default function UserList() {
+export default function UserList({users}) {
   const [page, setPage] = useState(1);
-  const { data, isLoading, isFetching, error } = useUsers(page);
+  const { data, isLoading, isFetching, error } = useUsers(page, {
+    initialData: users
+  });
 
   const isWideVersion = useBreakpointValue({
     base: false,
     lg: true,
   });
 
- async function handlePrefetchUser(userId: number) {
+ async function handlePrefetchUser(userId: string) {
 await queryClient.prefetchQuery(['user', userId], async () => {
   const response = await api.get(`users/${userId}`)
 
@@ -105,7 +108,7 @@ await queryClient.prefetchQuery(['user', userId], async () => {
                         <Td>
                           <Box>
 
-                            <Link color="purple.400" onMouseEnter={() => handlePrefetchUser(Number(user.id))}>
+                            <Link color="purple.400" onMouseEnter={() => handlePrefetchUser(user.id)}>
                             <Text fontWeight="bold">{user.name}</Text>
                             </Link>
                             <Text fontSize="sm" color="gray.300">
@@ -142,4 +145,15 @@ await queryClient.prefetchQuery(['user', userId], async () => {
       </Flex>
     </Box>
   );
+}
+
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  const {users, totalCount} = await getUsers(1)
+
+  return {
+    props: {
+      users
+    }
+  }
 }
